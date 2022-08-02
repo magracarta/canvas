@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>canvas</title>
+    <style>
+        .canvas {
+            background: #eee;
+        }
+    </style>
+</head>
+<body>
+    <h1>Transform</h1>
+    <canvas class="canvas" width="500" height="500"></canvas>
+    <script>
+        const canvas = document.querySelector('.canvas');
+        const context = canvas.getContext('2d');
+
+        context.fillRect(200,200,100,100);
+
+        function clickHandler(이벤트){
+            console.log(이벤트.offsetX, 이벤트.offsetY);
+            const x = 이벤트.offsetX;
+            const y = 이벤트.offsetY;
+
+            if(x > 200 && x < 200 + 100 && y > 200 && y < 200+100){
+                console.log('x ,y ok');
+            }   
+        }
+        canvas.addEventListener('click',clickHandler);
+    </script>
+</body>
+</html>
