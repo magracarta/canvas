@@ -13,54 +13,67 @@
   <body>
     <h1>Interaction</h1>
     <canvas class="canvas" width="600" height="400"></canvas>
-    
+    <script src="box.js"></script>
+    <script src="panel.js"></script>
     <script>
       const canvas = document.querySelector('.canvas');
       const context = canvas.getContext('2d');
       const boxes = [];
       const mousePos = {x: 0, Y: 0};
+      let panel;
       let selectedBox;//클릭된 box
+      let oX; 
+      let oY; 
+      let step; //애플리케이션의 상태(단계)를 저장 1~4
       context.font = 'bold 30px sans-serif';
 
-      class Box {
-        constructor(index,x,y,speed) {
-            this.index=index;
-            this.x =x;
-            this.y = y;
-            this.speed = speed;
-            this.width=100;
-            this.height=100;
-            this.draw();
-        }
-        draw(){
-            context.fillStyle='rgba(0,0,0,0.5)';
-            context.fillRect(this.x, this.y,100,100);
-            context.fillStyle='#fff';
-            context.fillText(this.index, this.x+30, this.y+30);
-        }
-      }
+      
 
       function render(){
         context.clearRect(0,0,canvas.width,canvas.height);
         let box;
         for(let i=0; i < boxes.length; i++){
-          box =boxes[i];
-          box.x+=box.speed;
-          if(box.x>canvas.width){
-            box.x=-100;
+             box =boxes[i];
+            // box.x+=box.speed;
+            // if(box.x>canvas.width){
+            //   box.x=-100;
+            // }
+            box.draw();
           }
-          box.draw();
+        switch (step){
+          case 1:
+            for(let i=0; i < boxes.length; i++){
+              box =boxes[i];
+              box.x+=box.speed;
+              if(box.x>canvas.width){
+                box.x=-100;
+              }
+            }
+            break;
+          case 2:
+            panel.draw();
+            break;
         }
+        
+        //panel.draw();
         requestAnimationFrame(render);
       }
 
       let tempX, tempY, tempSpeed;
-      for(let i =0; i<10; i++){
-        tempX=Math.random() * canvas.width * 0.8;
-        tempY=Math.random() * canvas.height * 0.8;
-        tempSpeed= Math.random() * 4 + 1;
-        boxes.push(new Box(i, tempX, tempY ,tempSpeed));
-      };
+      function init(){
+        step = 1;
+        oX = canvas.width * 0.5; 
+        oY = canvas.height * 0.5; 
+          for(let i =0; i<10; i++){
+            tempX=Math.random() * canvas.width * 0.8;
+            tempY=Math.random() * canvas.height * 0.8;
+            tempSpeed= Math.random() * 4 + 1;
+            boxes.push(new Box(i, tempX, tempY ,tempSpeed));
+        };
+        panel =  new Panel();
+        render();
+      }
+      
       canvas.addEventListener('click', e=>{
         mousePos.x = e.offsetX;
         mousePos.y = e.offsetY;
@@ -74,9 +87,14 @@
               selectedBox = box;
           }
         }
-        console.log(selectedBox.index);
+        if(selectedBox){
+          console.log(selectedBox.index);
+          step =2;
+          selectedBox=null;
+        }
+        
       });
-      render();
+      init();
     </script>
   </body>
 </html>
